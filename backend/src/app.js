@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import posts from './routes/posts.js';
+import auth from './routes/auth.js';
+import recipe from './routes/recipe.js';
 import db from './config/db.js';
 import { Config } from './config/index.js';
 
@@ -22,7 +23,8 @@ app.use(cors(corsOptions));
 app.use(morgan());
 app.use(helmet());
 
-app.use("/api/posts", posts);
+app.use("/api/auth", auth);
+app.use("/api/recipe", recipe);
 
 app.use((req, res, next) => {
     res.status(404).json({ message: 'Route not found' });
