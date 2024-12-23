@@ -33,7 +33,7 @@ const Login = () => {
             }, { withCredentials: true });
 
             if (response.status === 200) {
-                login(response.data);  // assuming the response contains user data
+                login(response.data);
                 navigate('/');
             }
         } catch (error) {
