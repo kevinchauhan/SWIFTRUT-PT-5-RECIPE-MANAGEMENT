@@ -12,51 +12,34 @@ const HomePage = () => {
     });
 
     const { isAuthenticated } = useAuthStore();
-
     const navigate = useNavigate();
 
-    // Fetch all recipes from the backend
+    // Fetch recipes based on search query and filters
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BACKEND_API_URL}/api/recipe`);
+                const queryParams = new URLSearchParams();
+
+                if (searchQuery) queryParams.append('search', searchQuery);
+                if (filters.cuisineType) queryParams.append('cuisineType', filters.cuisineType);
+                if (filters.prepTime) queryParams.append('prepTime', filters.prepTime);
+
+                const response = await axios.get(
+                    `${import.meta.env.VITE_BACKEND_API_URL}/api/recipe?${queryParams.toString()}`
+                );
                 setRecipes(response.data);
             } catch (error) {
                 console.error('Error fetching recipes:', error);
             }
         };
         fetchRecipes();
-    }, []);
-
-    // Handle deletion of a recipe
-    const handleDelete = async (id) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this recipe?');
-        if (confirmDelete) {
-            try {
-                await axios.delete(`${import.meta.env.VITE_BACKEND_API_URL}/api/recipes/${id}`);
-                setRecipes(recipes.filter((recipe) => recipe._id !== id));
-            } catch (error) {
-                console.error('Error deleting recipe:', error);
-            }
-        }
-    };
-
-    // Filter the recipes based on search and filters
-    const filteredRecipes = recipes.filter((recipe) => {
-        const matchSearchQuery = recipe.title.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchCuisineType = filters.cuisineType ? recipe.cuisineType === filters.cuisineType : true;
-        const matchPrepTime = filters.prepTime ? recipe.prepTime <= filters.prepTime : true;
-
-        return matchSearchQuery && matchCuisineType && matchPrepTime;
-    });
+    }, [searchQuery, filters]);
 
     // Handle "Create Recipe" button click
     const handleCreateRecipeClick = () => {
         if (!isAuthenticated) {
-            // If not logged in, redirect to the login page
             navigate('/login');
         } else {
-            // If logged in, navigate to the create recipe form page
             navigate('/recipe-form');
         }
     };
@@ -75,6 +58,16 @@ const HomePage = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="px-4 py-2 border border-gray-300 rounded-md w-full sm:w-64"
                     />
+                    {/* <select
+                        value={filters.cuisineType}
+                        onChange={(e) => setFilters({ ...filters, cuisineType: e.target.value })}
+                        className="px-4 py-2 border border-gray-300 rounded-md"
+                    >
+                        <option value="">All Cuisines</option>
+                        <option value="Italian">Italian</option>
+                        <option value="Indian">Indian</option>
+                        <option value="Mexican">Mexican</option>
+                    </select>
                     <select
                         value={filters.prepTime}
                         onChange={(e) => setFilters({ ...filters, prepTime: e.target.value })}
@@ -84,7 +77,7 @@ const HomePage = () => {
                         <option value="30">Up to 30 minutes</option>
                         <option value="60">Up to 60 minutes</option>
                         <option value="120">Up to 120 minutes</option>
-                    </select>
+                    </select> */}
                 </div>
 
                 <button
@@ -97,8 +90,8 @@ const HomePage = () => {
 
             {/* Recipe List */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {filteredRecipes.length > 0 ? (
-                    filteredRecipes.map((recipe) => (
+                {recipes.length > 0 ? (
+                    recipes.map((recipe) => (
                         <div key={recipe._id} className="p-4 border border-gray-300 rounded-md shadow-sm hover:shadow-lg">
                             <img
                                 src={recipe.coverImage?.IMAGE || 'https://www.foodiesfeed.com/wp-content/uploads/2023/06/burger-with-melted-cheese.jpg'}
@@ -113,17 +106,6 @@ const HomePage = () => {
                             </p>
                             <div className="flex justify-between items-center mt-4">
                                 <Link to={`/recipe/${recipe._id}`} className="text-indigo-600 hover:underline">View Recipe</Link>
-                                {/* {isAuthenticated && (
-                                    <div className="flex space-x-4">
-                                        <Link to={`/recipe-form/${recipe._id}`} className="text-blue-600 hover:underline">Edit</Link>
-                                        <button
-                                            onClick={() => handleDelete(recipe._id)}
-                                            className="text-red-600 hover:underline"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                )} */}
                             </div>
                         </div>
                     ))

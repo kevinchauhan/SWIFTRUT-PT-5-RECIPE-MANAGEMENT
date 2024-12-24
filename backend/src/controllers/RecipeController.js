@@ -4,7 +4,24 @@ class RecipeController {
     // Get all recipes
     static async getAllRecipes(req, res) {
         try {
-            const recipes = await Recipe.find().sort({ createdAt: -1 });
+            const { search } = req.query;
+
+            // Build the query object
+            const query = {};
+
+            if (search) {
+                query.$or = [
+                    { title: { $regex: search, $options: 'i' } }, // Case-insensitive title search
+                    { ingredients: { $regex: search, $options: 'i' } }, // Case-insensitive ingredient search
+                    { instructions: { $regex: search, $options: 'i' } }, // Case-insensitive instructions search
+                    { cuisineType: { $regex: search, $options: 'i' } }, // Case-insensitive cuisineType search
+                    { notes: { $regex: search, $options: 'i' } } // Case-insensitive notes search
+                ];
+            }
+
+            // Fetch recipes with search filters and sorting
+            const recipes = await Recipe.find(query).sort({ createdAt: -1 });
+
             res.json(recipes);
         } catch (error) {
             res.status(500).json({ message: error.message });
