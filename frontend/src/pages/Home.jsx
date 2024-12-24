@@ -94,7 +94,7 @@ const HomePage = () => {
                     recipes.map((recipe) => (
                         <div key={recipe._id} className="p-4 border border-gray-300 rounded-md shadow-sm hover:shadow-lg">
                             <img
-                                src={recipe.coverImage?.IMAGE || 'https://www.foodiesfeed.com/wp-content/uploads/2023/06/burger-with-melted-cheese.jpg'}
+                                src={recipe.coverImage}
                                 alt={recipe.title}
                                 className="w-full h-48 object-cover rounded-md mb-4"
                             />
