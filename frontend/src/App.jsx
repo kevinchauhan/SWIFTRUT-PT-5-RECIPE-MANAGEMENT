@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import HomePage from './pages/Home';
 import RecipeFormPage from './pages/RecipeForm';
+import RecipeDetailsPage from './pages/RecipeDetails';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/recipe-form" element={<RecipeFormPage />} />
             <Route path="/recipe-form/:id" element={<RecipeFormPage />} />
+            <Route path="/recipe/:id" element={<RecipeDetailsPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Routes>
