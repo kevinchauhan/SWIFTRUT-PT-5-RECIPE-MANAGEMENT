@@ -5,8 +5,10 @@ import Signup from './pages/Signup';
 import HomePage from './pages/Home';
 import RecipeFormPage from './pages/RecipeForm';
 import RecipeDetailsPage from './pages/RecipeDetails';
+import axios from 'axios';
 
 function App() {
+  axios.defaults.withCredentials = true;
   return (
     <Router>
       <div className="flex flex-col min-h-screen bg-violet-50">

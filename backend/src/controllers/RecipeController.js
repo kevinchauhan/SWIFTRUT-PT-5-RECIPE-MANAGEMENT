@@ -31,12 +31,12 @@ class RecipeController {
             title,
             ingredients,
             instructions,
-            author: req.user.userId,  // Save the logged-in user's ID as the author
+            author,
             cuisineType,
             prepTime,
             coverImage,
+            userId: req.user.id,
         });
-
         try {
             await newRecipe.save();
             res.status(201).json(newRecipe);
@@ -55,7 +55,7 @@ class RecipeController {
             }
 
             // Check if the logged-in user is the author of the recipe
-            if (recipe.author.toString() !== req.user.userId) {
+            if (recipe.userId?.toString() !== req.user?.id.toString()) {
                 return res.status(403).json({ message: 'You are not authorized to update this recipe' });
             }
 
@@ -82,7 +82,7 @@ class RecipeController {
             }
 
             // Check if the logged-in user is the author of the recipe
-            if (recipe.author.toString() !== req.user.userId) {
+            if (recipe.author.toString() !== req.user.id) {
                 return res.status(403).json({ message: 'You are not authorized to delete this recipe' });
             }
 

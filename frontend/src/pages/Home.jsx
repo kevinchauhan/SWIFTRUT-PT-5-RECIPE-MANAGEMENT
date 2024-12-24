@@ -113,7 +113,7 @@ const HomePage = () => {
                             </p>
                             <div className="flex justify-between items-center mt-4">
                                 <Link to={`/recipe/${recipe._id}`} className="text-indigo-600 hover:underline">View Recipe</Link>
-                                {isAuthenticated && (
+                                {/* {isAuthenticated && (
                                     <div className="flex space-x-4">
                                         <Link to={`/recipe-form/${recipe._id}`} className="text-blue-600 hover:underline">Edit</Link>
                                         <button
@@ -123,7 +123,7 @@ const HomePage = () => {
                                             Delete
                                         </button>
                                     </div>
-                                )}
+                                )} */}
                             </div>
                         </div>
                     ))

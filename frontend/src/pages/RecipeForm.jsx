@@ -22,7 +22,7 @@ const RecipeFormPage = () => {
         if (id) {
             const fetchRecipe = async () => {
                 try {
-                    const response = await axios.get(`${import.meta.env.VITE_BACKEND_API_URL}/api/recipes/${id}`);
+                    const response = await axios.get(`${import.meta.env.VITE_BACKEND_API_URL}/api/recipe/${id}`);
                     setRecipe(response.data);
                 } catch (error) {
                     console.error('Error fetching recipe:', error);
@@ -45,11 +45,11 @@ const RecipeFormPage = () => {
         try {
             if (id) {
                 // Editing an existing recipe
-                await axios.put(`${import.meta.env.VITE_BACKEND_API_URL}/api/recipes/${id}`, recipe);
+                await axios.put(`${import.meta.env.VITE_BACKEND_API_URL}/api/recipe/${id}`, recipe);
                 navigate(`/recipe/${id}`); // Redirect to the recipe detail page after successful edit
             } else {
                 // Creating a new recipe
-                await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/api/recipes`, recipe);
+                await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/api/recipe`, recipe);
                 navigate('/'); // Redirect to the home page after successful creation
             }
         } catch (error) {

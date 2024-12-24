@@ -8,6 +8,7 @@ const recipeSchema = new mongoose.Schema({
     cuisineType: { type: [String] },
     prepTime: { type: Number, required: true },
     coverImage: { type: String },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'recipe', required: true },
 }, { timestamps: true });
 
 export default mongoose.model('Recipe', recipeSchema);
