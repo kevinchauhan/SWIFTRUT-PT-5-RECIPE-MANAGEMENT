@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import useAuthStore from '../store/authStore';
 
 const HomePage = () => {
     const [recipes, setRecipes] = useState([]);
@@ -9,16 +10,16 @@ const HomePage = () => {
         cuisineType: '',
         prepTime: ''
     });
-    const navigate = useNavigate();
 
-    // Check if the user is logged in (example: using localStorage for token)
-    const isLoggedIn = localStorage.getItem('authToken');  // Assuming the token is stored here
+    const { isAuthenticated } = useAuthStore();
+
+    const navigate = useNavigate();
 
     // Fetch all recipes from the backend
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BACKEND_API_URL}/api/recipes`);
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_API_URL}/api/recipe`);
                 setRecipes(response.data);
             } catch (error) {
                 console.error('Error fetching recipes:', error);
@@ -51,7 +52,7 @@ const HomePage = () => {
 
     // Handle "Create Recipe" button click
     const handleCreateRecipeClick = () => {
-        if (!isLoggedIn) {
+        if (!isAuthenticated) {
             // If not logged in, redirect to the login page
             navigate('/login');
         } else {
@@ -100,7 +101,7 @@ const HomePage = () => {
                     filteredRecipes.map((recipe) => (
                         <div key={recipe._id} className="p-4 border border-gray-300 rounded-md shadow-sm hover:shadow-lg">
                             <img
-                                src={recipe.coverImage}
+                                src={recipe.coverImage?.IMAGE || 'https://www.foodiesfeed.com/wp-content/uploads/2023/06/burger-with-melted-cheese.jpg'}
                                 alt={recipe.title}
                                 className="w-full h-48 object-cover rounded-md mb-4"
                             />
@@ -112,15 +113,17 @@ const HomePage = () => {
                             </p>
                             <div className="flex justify-between items-center mt-4">
                                 <Link to={`/recipe/${recipe._id}`} className="text-indigo-600 hover:underline">View Recipe</Link>
-                                <div className="flex space-x-4">
-                                    <Link to={`/recipe-form/${recipe._id}`} className="text-blue-600 hover:underline">Edit</Link>
-                                    <button
-                                        onClick={() => handleDelete(recipe._id)}
-                                        className="text-red-600 hover:underline"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
+                                {isAuthenticated && (
+                                    <div className="flex space-x-4">
+                                        <Link to={`/recipe-form/${recipe._id}`} className="text-blue-600 hover:underline">Edit</Link>
+                                        <button
+                                            onClick={() => handleDelete(recipe._id)}
+                                            className="text-red-600 hover:underline"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))
