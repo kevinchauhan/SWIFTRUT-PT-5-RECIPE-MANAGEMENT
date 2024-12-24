@@ -1,9 +1,18 @@
-// src/components/Header.js
 import { Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
+import axios from 'axios';
 
 const Header = () => {
     const { isAuthenticated, logout } = useAuthStore();
+
+    const handleLogout = async () => {
+        try {
+            await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/api/auth/logout`);
+            logout(); // Clear the user state in Zustand
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    };
 
     return (
         <header className="bg-white shadow-md text-gray-800 p-4">
@@ -28,7 +37,7 @@ const Header = () => {
                         ) : (
                             <li>
                                 <button
-                                    onClick={logout}
+                                    onClick={handleLogout}
                                     className="text-gray-600 hover:text-indigo-600 focus:outline-none"
                                 >
                                     Logout
