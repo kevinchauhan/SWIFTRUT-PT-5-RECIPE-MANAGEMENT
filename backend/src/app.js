@@ -13,7 +13,6 @@ const corsOptions = {
     origin: Config.FRONTEND_URL,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 db()
